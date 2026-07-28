@@ -35,6 +35,35 @@ export function initAuth() {
     const formSignup = document.getElementById('form-signup');
     const btnGoogle = document.getElementById('btn-login-google');
 
+    // Trata o retorno de login via redirecionamento (caso o pop-up seja bloqueado no mobile)
+    firebase.auth().getRedirectResult().then((result) => {
+        if (result && result.user) {
+            const user = result.user;
+            const nomeCompleto = user.displayName;
+            const matriculaGerada = user.email.split('@')[0].replace('.', '_');
+
+            db.ref(`estudantes/${matriculaGerada}`).once('value', (snapshot) => {
+                if (!snapshot.exists()) {
+                    db.ref(`estudantes/${matriculaGerada}`).set({
+                        nome: nomeCompleto,
+                        senha: 'autenticado_via_google_auth'
+                    });
+                }
+                localStorage.setItem('trackbus_aluno_nome', nomeCompleto);
+                localStorage.setItem('trackbus_aluno_matricula', matriculaGerada);
+                updateUserDOM(nomeCompleto, matriculaGerada);
+                navigateTo('screen-home');
+            });
+        }
+    }).catch((error) => {
+        console.error("Erro no retorno do redirect Google:", error);
+        Swal.fire({
+            title: 'Falha no Login',
+            text: `Erro (${error.code}): ${error.message}`,
+            icon: 'error'
+        });
+    });
+
     tabSignin?.addEventListener('click', () => {
         tabSignin.classList.add('active');
         tabSignup.classList.remove('active');
@@ -129,8 +158,20 @@ export function initAuth() {
                     navigateTo('screen-home');
                 });
             })
-            .catch(() => {
-                Swal.fire({ title: 'Falha no Login', text: 'Não foi possível logar com Google.', icon: 'error' });
+            .catch((error) => {
+                console.error("Erro no login Google:", error);
+                
+                // Redireciona caso ocorra bloqueio de pop-up no dispositivo móvel
+                if (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user') {
+                    firebase.auth().signInWithRedirect(provider);
+                    return;
+                }
+
+                Swal.fire({ 
+                    title: 'Falha no Login', 
+                    text: `Erro (${error.code}): ${error.message}`, 
+                    icon: 'error' 
+                });
             });
     });
 
