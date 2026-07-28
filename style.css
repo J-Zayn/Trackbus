@@ -9,6 +9,23 @@
     --sombra-header: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100dvh;
+}
+
+#app-container, .viewport {
+    width: 100%;
+    min-height: 100dvh;
+}
+
+.app-screen {
+    min-height: 100dvh;
+    box-sizing: border-box;
+}
+
 @media (prefers-color-scheme: dark) {
     :root {
         --cinza-fundo: #000000;
@@ -76,14 +93,16 @@ body {
 .sidebar {
     position: fixed;
     top: 0;
+    bottom: 0;
     left: -280px;
     width: 280px;
-    height: 100vh;
+    height: 100dvh;
     background-color: #121212;
     z-index: 1000;
     display: flex;
     flex-direction: column;
     padding: 24px 16px;
+    box-sizing: border-box;
     transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 4px 0 15px rgba(0, 0, 0, 0.5);
 }
