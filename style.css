@@ -1207,3 +1207,46 @@ body {
     color: var(--azul-escuro);
     margin: 0;
 }
+
+.toastify {
+    min-width: 300px;
+    max-width: 360px;
+    font-family: 'Poppins', sans-serif;
+    letter-spacing: .2px;
+    transition: .25s ease;
+}
+
+.toastify:hover {
+    transform: translateY(2px);
+}
+
+.toastify.on {
+    animation: toastSlide .25s ease;
+}
+
+@keyframes toastSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.toastify {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+
+    min-width: 320px;
+    max-width: 380px;
+
+    font-family: 'Poppins', sans-serif;
+    border-radius: 12px;
+}
+
+.toastify:hover {
+    transform: translateX(-50%) translateY(2px) !important;
+}

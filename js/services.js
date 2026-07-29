@@ -1,3 +1,4 @@
+import { showSuccess } from './toast.js';
 import { db } from './firebase-config.js';
 import { navigateTo } from './router.js';
 import { initTrackingMap, updateBusOnMap, resetTrackingMarker } from './map.js';
@@ -215,13 +216,9 @@ export function initServices() {
                 mensagem: msgText,
                 data: timestamp
             }).then(() => {
-                Swal.fire({
-                    title: 'Mensagem Enviada!',
-                    text: 'Seu feedback foi entregue à secretaria.',
-                    icon: 'success'
-                });
-                formFeedback.reset();
-                navigateTo('screen-home');
+            showSuccess("Seu feedback foi entregue à secretaria.");
+            formFeedback.reset();
+            navigateTo('screen-home');
             });
         });
     }
